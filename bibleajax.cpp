@@ -45,6 +45,7 @@ int main() {
   // GET THE INPUT DATA
   // browser sends us a string of field name/value pairs from HTML form
   // retrieve the value for each appropriate field name
+  form_iterator bt = cgi.getElement("bible_type");  //I added this
   form_iterator st = cgi.getElement("search_type");
   form_iterator book = cgi.getElement("book");
   form_iterator chapter = cgi.getElement("chapter");
@@ -70,7 +71,9 @@ int main() {
   /* TO DO: PUT CODE HERE TO CALL YOUR BIBLE CLASS FUNCTIONS
    *        TO LOOK UP THE REQUESTED VERSES
    */
-  Bible webBible("/home/class/csc3004/Bibles/web-complete");
+  //cout << bt->getValue() << " test" << endl;  //Test
+
+  Bible webBible("/home/class/csc3004/Bibles/" + bt->getValue()); //changed this web-complete
   Verse aVerse;
   LookupResult result;
 
@@ -110,7 +113,7 @@ int main() {
   }
   }
   else {
-	  cout << "<p>Invalid Input: <em>report the more specific problem.</em></p>" << endl;
+	  cout << "<p>Invalid Input: " << webBible.error(result) << "</p>" << endl;
   }
   return 0;
 }
