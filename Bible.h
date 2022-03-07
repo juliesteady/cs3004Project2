@@ -14,9 +14,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
+#include <list>
 #include <stdio.h>
 #include <stdlib.h>
 using namespace std;
+extern map<Ref, int> refs;
 
 // status codes to be returned when looking up a reference
 enum LookupResult { SUCCESS, NO_BOOK, NO_CHAPTER, NO_VERSE, OTHER };
@@ -28,6 +31,7 @@ class Bible {	// A class to represent a version of the bible
    bool isOpen = false;			// true if file is open
    // OPTIONAL: you may add variables to keep track of
    // the current line and/or reference when scanning the file
+   //map<Ref, int> refs;
 
  public:
    Bible();	// Default constructor
@@ -50,5 +54,10 @@ class Bible {	// A class to represent a version of the bible
    Ref next(const Ref ref, LookupResult& status);
    // OPTIONAL: Return the reference before the given parameter ref
    Ref prev(const Ref ref, LookupResult& status);
+
+   //Index methods
+   //string getNextWord(string&);
+   int buildTextIndex ();
+   //list<int> indexSearch(string);
 };
 #endif //Bible_H

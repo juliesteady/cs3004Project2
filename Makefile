@@ -18,7 +18,19 @@ USER= julsteady
 CC= g++
 CFLAGS= -g -std=c++11
 
-all:	bibleajax.cgi PutCGI PutHTML
+all: testreader
+# bibleajax.cgi PutCGI PutHTML
+# comment so I don't ruin project2, I added testreader
+
+# I added this changed from biblereader.o
+# Main Program source
+testreader.o: Ref.h Verse.h Bible.h testreader.cpp
+	$(CC) $(CFLAGS) -c testreader.cpp
+
+# I added this changed from biblereader
+# Build the executable
+testreader: Ref.o Verse.o Bible.o testreader.o
+	$(CC) $(CFLAGS) -o testreader Ref.o Verse.o Bible.o testreader.o
 
 # TO DO: For bibleajax.cgi, add dependencies to include
 # compiled classes from Project 1 to be linked into the executable program

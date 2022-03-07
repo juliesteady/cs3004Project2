@@ -7,14 +7,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
+#include <list>
 #include <stdio.h>
 #include <stdlib.h>
 using namespace std;
 
+map<Ref, int> refs;
+
+//add index here
 Bible::Bible() { // Default constructor
 	infile = "/home/class/csc3004/Bibles/web-complete";
 }
 
+//add index here
 // Constructor – pass bible filename
 Bible::Bible(const string s) { infile = s; }
 
@@ -124,3 +130,58 @@ void Bible::display() {
 
 // OPTIONAL: Return the reference before the given ref
 //Ref Bible::prev(const Ref ref, LookupResult& status) {}
+
+
+
+
+/*****************************************************************************/
+/*      buildTextIndex - reads text file and constructs inverted index       */
+/*****************************************************************************/
+//TODO: FIX THIS
+int Bible::buildTextIndex () {
+  //ifstream  infile;     /* input file descriptor */
+  int position;         /* location of line in the file */
+  string text, line, word;
+  int verseCount = 0, rootcount = 0, pos;
+  //Ref ref;
+  //stemming::english_stem<char, std::char_traits<char> > StemEnglish;
+
+  /* open text file */
+  instream.open(infile.c_str(), ios::in);
+  if (!instream) {
+	cerr << "Error - can't open input file: " << infile << endl;
+	return 0;  /* false, indicates error */
+  }
+
+  /* process text file */
+  while (!instream.fail()) {
+    /* Get the file position at beginning of line */
+    position = instream.tellg();
+    /* get the next line */
+    getline(instream,line);
+    /* Convert line to upper case*/
+    //transform(line.begin(), line.end(), line.begin(), ::toupper);
+
+	/* for each word in the line, stem it and put stem in map */
+	if(!instream.eof()) {
+	  //word = getNextWord(line);
+	  //if (word.length() > 0 ) {
+		/* Reduce to Stem */
+		//StemEnglish(word);
+		/* Convert to upper case*/
+		//transform(word.begin(), word.end(),word.begin(), ::toupper);
+		Ref ref(line);
+		refs[ref] = position;
+		verseCount++;
+
+		//set to value for mapping no push_back
+		//refs[ref].push_back(position); // remember offset for current line
+	  //}
+	} // end while loop for one line
+
+  } // end while loop for lines of file
+  
+  //31,102 should be verseCount
+  cout << "Verses: " << verseCount << " Unique: " << refs.size() << endl;
+  return 1;  /* true, indicates success */
+}

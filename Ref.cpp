@@ -70,6 +70,32 @@ bool Ref::operator==(const Ref r) {
  }
 
 // OPTIONAL: define < and > comparisons
+bool Ref::operator<(const Ref r) const {
+// Return true if this Ref should be ordered before r,
+// and return false otherwise.
+// The body should be implemented using an appropriate combination
+// of comparisons of the book, chapter and verse numbers.
+     bool ans = false;
+     if(r.book > book){
+          ans = true;
+          return ans;
+     }
+     if(r.book == book){
+          if(r.chap > chap){
+               ans = true;
+               return ans;
+          }
+          if(r.chap == chap){
+               if(r.verse > verse){
+                    ans = true;
+                    return ans;
+               }
+          }
+     }
+
+return ans;
+}
+
 
 // TO DO: modify display function to show book name instead of book number
 void Ref::display() { 	// Display Reference
