@@ -42,7 +42,7 @@ class Bible {	// A class to represent a version of the bible
    // REQUIRED:
    // Return the next verse from the Bible file stream if the file is open.
    // If the file is not open, open the file and return the first verse.
-   Verse nextVerse(LookupResult& status);
+   Verse nextVerse(int position, LookupResult& status);
    
    // Information functions (REQUIRED)
    // Return an error message string to describe status

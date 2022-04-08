@@ -22,11 +22,11 @@ Verse::Verse(const string s) {
 
 // REQUIRED: Accessors
 string Verse::getVerse() {
-	   return verseText; //Fix this
+	   return verseText;
 }
 
 Ref Verse::getRef() {
-	return verseRef;	//Fix this
+	return verseRef;	
 }
 
 // display reference and verse

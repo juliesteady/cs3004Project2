@@ -75,6 +75,7 @@ int main (int argc, char **argv) {
     }
 
     cout << flush;
+    cout << endl;
     cout << "Using Bible from: ";
 	webBible.display();
 
@@ -82,15 +83,19 @@ int main (int argc, char **argv) {
 	Ref ref(b, c, v);
 
 	// Use the Bible object to retrieve the verse by reference
-	cout << "Looking up reference: " << flush;
-	ref.display();
+	//cout << "Looking up reference: " << flush;
+	//ref.display();
 
     //cout << "errorrr";
-	cout << endl << endl;
+	cout << endl;
 
-    //cout << "Error1";
+    cout << "Building TextIndex ..." << flush;
     webBible.buildTextIndex();
 
+    cout << endl << endl;
+
+    //Check for last ref and byte count
+    /*
     map<Ref, int>::iterator last = refs.find(Ref("66:22:21"));  //66:22:21 is last 
 
 	if (last == refs.end()){
@@ -98,11 +103,45 @@ int main (int argc, char **argv) {
     }else{
 		cout << "Final byte position: " << refs[Ref("66:22:21")] << endl; // Final byte, position of final ref
 	}
+    */
 
+    cout << "Looking up reference: " << flush;
+	ref.display();
+
+    cout << endl << endl;
+
+    verse = webBible.lookup(ref, result);
+
+    if (result == 0){
+        verse.display();
+        cout << endl;
+
+        int i = 1;
+        while (numV > i){ 
+            cout << endl;
+            ref = webBible.next(ref, result);
+
+            verse = webBible.lookup(ref, result);
+            if(result == 0){
+                if(verse.getRef().getBook() == ref.getBook()) {
+                    verse.display();
+                    cout << endl;
+                } else {
+                    cout << "END OF BOOK";
+                    break;
+                }
+            } else {
+                cout << webBible.error(result) << endl;
+                break;
+            }
+            i++;
+        }
+    } else {
+        cout << webBible.error(result) << endl;
+    }
+
+    //Past code for Poject 1 & 2
     /*
-	verse = webBible.lookup(ref, result);
-
-    //cout << "error2";
     if(result == 0){
 	verse.display();
     cout << endl;

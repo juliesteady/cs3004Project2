@@ -26,7 +26,47 @@ Bible::Bible(const string s) { infile = s; }
 
 // REQUIRED: lookup finds a given verse in this Bible
 Verse Bible::lookup(Ref ref, LookupResult& status) { 
-    // TODO: scan the file to retrieve the line that holds ref ...
+  	map<Ref, int>::iterator it;  // iterator for find
+	
+	Verse aVerse;
+	string str;
+  	/* First use find, so as to NOT create a new entry in refs */
+  	it = refs.find(ref);
+	int index = 0;
+
+  	if (!(it == refs.end())) {
+
+		  if (!isOpen) {
+			  instream.open(infile.c_str(), ios::in);
+			  isOpen = true;
+		  }
+		  if (!instream) {
+			  error(OTHER);
+			  Verse verse;
+		  } else {
+			  instream.seekg(refs[ref], ios::beg);
+			  getline(instream, str);
+			  Verse verse(str);
+			  status = SUCCESS;
+			  return verse;
+		  }
+
+	  }
+
+	if (ref < (aVerse.getRef()) == NO_BOOK) {
+		status = NO_CHAPTER;
+	} else if (ref < (aVerse.getRef()) == NO_CHAPTER) {
+		status = NO_VERSE;
+	} else if (ref < (aVerse.getRef()) == NO_VERSE) {
+		status = NO_VERSE;
+	} else {
+		status = OTHER;
+	}
+
+	return (aVerse);
+
+	/*
+    // Scan the file to retrieve the line that holds ref ...
     // update the status variable
 	string buffer, verseText;
 	//int book, chap, verse;
@@ -35,12 +75,13 @@ Verse Bible::lookup(Ref ref, LookupResult& status) {
 	bool bCheck = false;
 	bool cCheck = false;
 	bool vCheck = false;
-	
+	*/
+/*
 	do {
-        /* get the next verse */
+        // get the next verse
         aVerse = nextVerse(status);
 
-        /* See if it is the right book */
+        // See if it is the right book
 		if(ref.getBook() == aVerse.getRef().getBook()){
 			bCheck = true;
 
@@ -54,7 +95,7 @@ Verse Bible::lookup(Ref ref, LookupResult& status) {
 		}
 
             if (ref == aVerse.getRef()) {
-                /* display the verse (if we got one) */
+                //display the verse (if we got one)
 				status = SUCCESS;
 				return aVerse;
                 //display_verse(buffer);
@@ -77,22 +118,28 @@ Verse Bible::lookup(Ref ref, LookupResult& status) {
 	// create and return the verse object
 	                // that is constructed from a line in the file.
     return aVerse;
+	*/
 }
 
 // REQUIRED: Return the next verse from the Bible file stream if the file is open.
 // If the file is not open, open the file and return the first verse.
-Verse Bible::nextVerse(LookupResult& status) {
-	string buffer, verseText;
-	if(isOpen){
-		getline(instream, buffer);
-	}else{
+Verse Bible::nextVerse(int position, LookupResult& status) {
+	string verseText;
+	if(!isOpen){
 		instream.open(infile.c_str(), ios::in);
 		isOpen = true;
-		getline(instream, buffer);
+	}
+	if(!instream){
+		error(OTHER);
+		Verse aVerse;
+		return aVerse;
+	} else {
+		instream.seekg(position, ios::beg);
+		getline(instream, verseText);
+		Verse aVerse(verseText);
+		return aVerse;
 	}
 
-	Verse aVerse(buffer); 	//Fix this
-	return(aVerse);	//Fix this
 }
 
 // REQUIRED: Return an error message string to describe status
@@ -114,18 +161,37 @@ string Bible::error(LookupResult status) {
 }
 
 void Bible::display() {
-	cout << "Bible file: " << infile << endl;
+	cout << infile << endl;
 }
 	
 // OPTIONAL access functions
 // OPTIONAL: Return the reference after the given ref
 
  Ref Bible::next(const Ref ref, LookupResult& status) {
-	
+	/*
 	Verse aVerse(nextVerse(status));
 	Ref aRef(aVerse.getRef());
 
 	return aRef;
+	*/
+	map<Ref, int>::iterator it = refs.find(ref);
+	Ref aRef;
+	it++;
+	//int index = it->second;	//put in check***
+
+	//instream.seekg(index);
+
+	//string str;
+	//getline(instream, str);
+	//getline(instream, str);
+
+	//Ref aRef(str);
+	if (it == refs.end()){
+		return aRef;
+	}else {
+		return it->first;
+	}
+
  }
 
 // OPTIONAL: Return the reference before the given ref
@@ -137,7 +203,7 @@ void Bible::display() {
 /*****************************************************************************/
 /*      buildTextIndex - reads text file and constructs inverted index       */
 /*****************************************************************************/
-//TODO: FIX THIS
+
 int Bible::buildTextIndex () {
   //ifstream  infile;     /* input file descriptor */
   int position;         /* location of line in the file */
@@ -157,6 +223,8 @@ int Bible::buildTextIndex () {
   while (!instream.fail()) {
     /* Get the file position at beginning of line */
     position = instream.tellg();
+
+	instream.unsetf(ios::skipws);
     /* get the next line */
     getline(instream,line);
     /* Convert line to upper case*/
@@ -180,8 +248,8 @@ int Bible::buildTextIndex () {
 	} // end while loop for one line
 
   } // end while loop for lines of file
-  
+  instream.close();
   //31,102 should be verseCount
-  cout << "Verses: " << verseCount << " Unique: " << refs.size() << endl;
+  //cout << "Verses: " << verseCount << " Unique: " << refs.size() << endl;
   return 1;  /* true, indicates success */
 }
